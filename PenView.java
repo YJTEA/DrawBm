@@ -1,5 +1,6 @@
 package in.andante.drawbm;
 
+import in.andante.drawbm.Main;
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
@@ -136,7 +137,7 @@ public void clearDrawList(){//クリア処理
 
 }
 
-public void insert(){//データベースにデータ挿入
+/*public void insert(){//データベースにデータ挿入
 	
 	ContentValues values = new ContentValues();//テーブルに含まれるカラムをキーとし、カラムに対して設定したい値をペアとして保存する
 	DBHelper db0 = new DBHelper(_context);
@@ -162,7 +163,7 @@ public void insert(){//データベースにデータ挿入
         Toast.makeText(_context, "Insert成功", Toast.LENGTH_SHORT).show();  
     }     
     
-}
+}*/
  
 public void saveToFile(){
 	
@@ -173,22 +174,28 @@ public void saveToFile(){
 	}
 	//認識された場合
 	try{
-		
-		File file0 = new File(Environment.getExternalStorageDirectory().getPath()+"/DrawBmData/");//画像用
-		
-		try{
-			if(!file0.exists()){//ファイルが存在しなければ作成
-				file0.mkdir();
-			}
-		}catch(SecurityException e){}
+		String folderPathI = Environment.getExternalStorageDirectory().getPath()+ "/DrawBmData/";//CSV用
+		File folder0 = new File(folderPathI);
+		//File file0 = new File(Environment.getExternalStorageDirectory().getPath()+"/DrawBmData/");//画像用
+		if(!folder0.exists()){//画像用フォルダが存在しなければ作成
+			folder0.mkdirs();
+		}
+
+		String folderPathC = Environment.getExternalStorageDirectory().getPath()+ "/DrawBmCSV/";//CSV用
+        File folder1 = new File(folderPathC);
+        if (!folder1.exists()) {
+            folder1.mkdirs();
+        }
+        
+        String text;
  	
 		// 日付でファイル名を作成　
 		Date mDate = new Date();
 		SimpleDateFormat fileName = new SimpleDateFormat("yyyy_MM_dd'at'HH_mm_ss",Locale.US);//US時刻
 	 
-		FileOutputStream fos0 = new FileOutputStream(new File(file0, fileName.format(mDate) + ".jpg"));//画像用
+		FileOutputStream fos0 = new FileOutputStream(new File(folder0, fileName.format(mDate) + ".jpg"));//画像用
 		
-		FileWriter fw = new FileWriter(Environment.getExternalStorageDirectory().getPath()+"/DrawBmCSV/"+fileName.format(mDate)+".csv");
+		FileWriter fw = new FileWriter(folderPathC+fileName.format(mDate)+".csv");
 		PrintWriter pw = new PrintWriter(new BufferedWriter(fw));
 		
 		bmp.compress(CompressFormat.JPEG, 100, fos0);
