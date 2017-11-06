@@ -11,12 +11,14 @@ import android.database.sqlite.SQLiteDatabase;//SQLite用
 public class DrawBm extends Activity {
 
 PenView penview;
+DBHelper dbhelper;
 	
 /*Called when the activity is first created.*/
 @Override
 public void onCreate(Bundle savedInstanceState) {
 	super.onCreate(savedInstanceState);
-	penview= new PenView(this);
+	dbhelper = new DBHelper(this);
+	penview = new PenView(this);
 	setContentView(penview);
 	//setContentView(R.layout.activity_sub);
 }
@@ -24,11 +26,9 @@ public void onCreate(Bundle savedInstanceState) {
 /*メニューの生成イベント*/
 @Override
 public boolean onCreateOptionsMenu(Menu menu) {//menu->draw_bm.xmlで記述
-
 	super.onCreateOptionsMenu(menu);
 	getMenuInflater().inflate(R.menu.draw_bm,menu);  
 	return true;
-	
 }
 
 /*メニューがクリックされた時のイベント*/
@@ -40,8 +40,8 @@ public boolean onOptionsItemSelected(MenuItem item) {
 			penview.clearDrawList(); 
 			break;
 		case R.id.item2:
-			penview.insert();
 			penview.saveToFile();
+			//dbhelper.insert();
 			penview.clearDrawList(); 
 			break;
 		case R.id.item3:
