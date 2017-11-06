@@ -7,11 +7,12 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
+import android.util.Log;
 import android.widget.Toast;
 import in.andante.drawbm.PenView;
 
 public class DBHelper extends SQLiteOpenHelper {
-
+	private static final String TAG = "DBHelper";
 	private static final int DB_VERSION = 1;
 	private static final String DB_NAME ="DrawBmDBv.db";
 	public Activity _context;
@@ -19,17 +20,18 @@ public class DBHelper extends SQLiteOpenHelper {
 
 	public DBHelper( Context context ){//コンストラクタ
 		super(context, DB_NAME, null, DB_VERSION);
+		insert();
 	}
 	
 	public void insert(){//データベースにデータ挿入
-		ContentValues values = new ContentValues();//テーブルに含まれるカラムをキーとし、カラムに対して設定したい値をペアとして保存する
 		SQLiteDatabase db1 = super.getWritableDatabase();//読み書き用
+		ContentValues values = new ContentValues();//テーブルに含まれるカラムをキーとし、カラムに対して設定したい値をペアとして保存する
 		
 	    try{
 	    	for(Pos p : this.posList){//posにデータ追加
 	    		values.put("X", p.X);
 	            values.put("Y", p.Y);
-	            values.put("z_pressure",p.pressure);
+	            values.put("Z_pressure",p.pressure);
 			}
 	    	db1.insert("account", null, values);
 	    }
@@ -51,10 +53,12 @@ public class DBHelper extends SQLiteOpenHelper {
 @Override
 public void onCreate(SQLiteDatabase db) {//データベースがない場合に作成される
 	
-		String DB_ITEM = "Create table DB_ITEM ("   
-                  + "Xpoint"
-                  + "Ypoint"  
-                  + "Pressure)";  
+		String DB_ITEM = "CREATE TABLE " + "(" 
+				+"X" 
+				+"Y"
+				+"Z_pressure"
+				+ ")";
+
 		
 		db.beginTransaction();//トランザクション処理開始
 		
@@ -62,6 +66,7 @@ public void onCreate(SQLiteDatabase db) {//データベースがない場合に�
 	        // テーブル作成を実行
 	        db.execSQL(DB_ITEM);
 	        db.setTransactionSuccessful();//成功
+	        Log.i(TAG,"テーブルが作成されました");
 		} 
 		catch(Exception e){// 例外発生
 			e.printStackTrace();
@@ -72,7 +77,7 @@ public void onCreate(SQLiteDatabase db) {//データベースがない場合に�
 		
 }
 	
-/*SQL取り出し部分*/  
+/*SQL取り出し部分
 private void buttonRowQuery(){  
         
         //rawQueryメソッドでデータを取得  
@@ -102,7 +107,7 @@ private void buttonRowQuery(){
             db2.close();//DB閉じる
         }  
         
-    }  
+    }  */  
 	
 	@Override
 	//データベースのバージョンが変更の場合に呼び出される
