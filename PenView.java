@@ -1,6 +1,7 @@
 package in.andante.drawbm;
 
 import in.andante.drawbm.Main;
+import in.andante.drawbm.Pos;
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
