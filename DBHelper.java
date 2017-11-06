@@ -1,24 +1,52 @@
 package in.andante.drawbm;
+import java.util.List;
+
 import android.app.Activity;
+import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
+import android.widget.Toast;
 import in.andante.drawbm.PenView;
 
 public class DBHelper extends SQLiteOpenHelper {
 
 	private static final int DB_VERSION = 1;
 	private static final String DB_NAME ="DrawBmDBv.db";
-	Context mContext;
 	public Activity _context;
+	public List<Pos> posList;//Posクラスの座標データを扱うリスト
 
 	public DBHelper( Context context ){//コンストラクタ
-		
 		super(context, DB_NAME, null, DB_VERSION);
-		mContext = context;
-		
 	}
+	
+	public void insert(){//データベースにデータ挿入
+		ContentValues values = new ContentValues();//テーブルに含まれるカラムをキーとし、カラムに対して設定したい値をペアとして保存する
+		SQLiteDatabase db1 = super.getWritableDatabase();//読み書き用
+		
+	    try{
+	    	for(Pos p : this.posList){//posにデータ追加
+	    		values.put("X", p.X);
+	            values.put("Y", p.Y);
+	            values.put("z_pressure",p.pressure);
+			}
+	    	db1.insert("account", null, values);
+	    }
+	    finally{
+	        db1.close();
+	    }
+	    
+	    long id = 0;
+	    //成功or失敗メッセージ
+	    if (id == -1) {  
+	        Toast.makeText(_context, "Insert失敗", Toast.LENGTH_SHORT).show();  
+	    } else {   
+	        Toast.makeText(_context, "Insert成功", Toast.LENGTH_SHORT).show();  
+	    }     
+	    
+	}
+	
 	
 @Override
 public void onCreate(SQLiteDatabase db) {//データベースがない場合に作成される
@@ -44,14 +72,11 @@ public void onCreate(SQLiteDatabase db) {//データベースがない場合に�
 		
 }
 	
-/* 
-SQL部分実行 
-*/  
+/*SQL取り出し部分*/  
 private void buttonRowQuery(){  
         
         //rawQueryメソッドでデータを取得  
-        DBHelper db2 = new DBHelper(_context);//Activityのcontext
-        SQLiteDatabase db3 = db2.getReadableDatabase();//読み取り用オブジェクト作成
+		SQLiteDatabase db2 = super.getReadableDatabase();//読み取り用オブジェクト作成
         StringBuilder text = new StringBuilder();//StringBuilder与えられたデータを文字列に変換  
         
         try{  
@@ -59,7 +84,7 @@ private void buttonRowQuery(){
         	String sql    = "SELECT * FROM DB_ITEM";
         	            
         	//SQL文の実行
-            Cursor cursor = db3.rawQuery(sql.toString(), null);   
+            Cursor cursor = db2.rawQuery(sql.toString(), null);   
       
             //カーソル開始位置を先頭にする
             cursor.moveToFirst();
@@ -74,7 +99,7 @@ private void buttonRowQuery(){
             }
             cursor.close();//SQL閉じる 
         }finally{  
-            db3.close();//DB閉じる
+            db2.close();//DB閉じる
         }  
         
     }  
