@@ -17,9 +17,9 @@ DBHelper dbhelper;
 @Override
 public void onCreate(Bundle savedInstanceState) {
 	super.onCreate(savedInstanceState);
-	dbhelper = new DBHelper(this);
 	penview = new PenView(this);
 	setContentView(penview);
+	dbhelper = new DBHelper(this);
 	//setContentView(R.layout.activity_sub);
 }
 
@@ -41,7 +41,7 @@ public boolean onOptionsItemSelected(MenuItem item) {
 			break;
 		case R.id.item2:
 			penview.saveToFile();
-			//dbhelper.insert();
+			dbhelper.insert();
 			penview.clearDrawList(); 
 			break;
 		case R.id.item3:
