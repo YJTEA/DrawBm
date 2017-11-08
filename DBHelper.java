@@ -1,4 +1,5 @@
 package in.andante.drawbm;
+import java.util.ArrayList;
 import java.util.List;
 
 import android.app.Activity;
@@ -17,10 +18,13 @@ public class DBHelper extends SQLiteOpenHelper {
 	private static final String DB_NAME ="DrawBmDBv.db";
 	public Activity _context;
 	public List<Pos> posList;//Posクラスの座標データを扱うリスト
+	PenView penview;
 
 	public DBHelper( Context context ){//コンストラクタ
 		super(context, DB_NAME, null, DB_VERSION);
-		insert();
+		_context = (Activity)context;
+		penview = new PenView(_context);
+		penview.posList = new ArrayList<Pos>();//ArrayList<型> 変数名 = new ArrayList<型>()　型はクラス
 	}
 	
 	public void insert(){//データベースにデータ挿入
@@ -28,24 +32,25 @@ public class DBHelper extends SQLiteOpenHelper {
 		ContentValues values = new ContentValues();//テーブルに含まれるカラムをキーとし、カラムに対して設定したい値をペアとして保存する
 		
 	    try{
-	    	for(Pos p : this.posList){//posにデータ追加
+	    	for(Pos p : penview.posList){//posにデータ追加
 	    		values.put("X", p.X);
 	            values.put("Y", p.Y);
 	            values.put("Z_pressure",p.pressure);
+	            db1.insert("account", null, values);
 			}
-	    	db1.insert("account", null, values);
 	    }
 	    finally{
 	        db1.close();
+	        Toast.makeText(_context, "Insert成功", Toast.LENGTH_SHORT).show();  
 	    }
 	    
-	    long id = 0;
+	  /*  long id = 0;
 	    //成功or失敗メッセージ
 	    if (id == -1) {  
 	        Toast.makeText(_context, "Insert失敗", Toast.LENGTH_SHORT).show();  
 	    } else {   
 	        Toast.makeText(_context, "Insert成功", Toast.LENGTH_SHORT).show();  
-	    }     
+	    }   */  
 	    
 	}
 	
@@ -53,18 +58,22 @@ public class DBHelper extends SQLiteOpenHelper {
 @Override
 public void onCreate(SQLiteDatabase db) {//データベースがない場合に作成される
 	
-		String DB_ITEM = "CREATE TABLE " + "(" 
-				+"X" 
+		/*String DB_ITEM = "CREATE TABLE (" +"X" 
 				+"Y"
 				+"Z_pressure"
-				+ ")";
-
-		
+				+ ")";*/
 		db.beginTransaction();//トランザクション処理開始
 		
+		// テーブル作成を実行
 		try{
-	        // テーブル作成を実行
-	        db.execSQL(DB_ITEM);
+			db.execSQL(
+					"CREATE TABLE PersonalData(" +
+					"   xpoint INTEGER," +
+					"   ypoint INTEGER," +
+					"   zpressure INTEGER" +
+					");"
+			);
+	        //db.execSQL(DB_ITEM);
 	        db.setTransactionSuccessful();//成功
 	        Log.i(TAG,"テーブルが作成されました");
 		} 
