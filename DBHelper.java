@@ -1,4 +1,7 @@
 package in.andante.drawbm;
+
+/*SQLite部分*/
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -13,6 +16,7 @@ import android.widget.Toast;
 import in.andante.drawbm.PenView;
 
 public class DBHelper extends SQLiteOpenHelper {
+	
 	private static final String TAG = "DBHelper";
 	private static final int DB_VERSION = 1;
 	private static final String DB_NAME ="DrawBmDBv.db";
@@ -21,18 +25,23 @@ public class DBHelper extends SQLiteOpenHelper {
 	PenView penview;
 
 	public DBHelper( Context context ){//コンストラクタ
+		
 		super(context, DB_NAME, null, DB_VERSION);
 		_context = (Activity)context;
 		penview = new PenView(_context);
-		penview.posList = new ArrayList<Pos>();//ArrayList<型> 変数名 = new ArrayList<型>()　型はクラス
+		penview.posList = new ArrayList<Pos>();
+		
 	}
 	
-	public void insert(){//データベースにデータ挿入
+	/*SQLiteへデータ追加*/
+	public void insert(){
+		
 		SQLiteDatabase db1 = super.getWritableDatabase();//読み書き用
 		ContentValues values = new ContentValues();//テーブルに含まれるカラムをキーとし、カラムに対して設定したい値をペアとして保存する
 		
 	    try{
-	    	for(Pos p : penview.posList){//posにデータ追加
+	    	/*データ追加部分*/
+	    	for(Pos p : penview.posList){
 	    		values.put("X", p.X);
 	            values.put("Y", p.Y);
 	            values.put("Z_pressure",p.pressure);
@@ -56,28 +65,23 @@ public class DBHelper extends SQLiteOpenHelper {
 	
 	
 @Override
-public void onCreate(SQLiteDatabase db) {//データベースがない場合に作成される
+public void onCreate(SQLiteDatabase db) {
 	
-		/*String DB_ITEM = "CREATE TABLE (" +"X" 
-				+"Y"
-				+"Z_pressure"
-				+ ")";*/
 		db.beginTransaction();//トランザクション処理開始
 		
-		// テーブル作成を実行
+		/*テーブル作成?*/
 		try{
 			db.execSQL(
 					"CREATE TABLE PersonalData(" +
 					"   xpoint INTEGER," +
 					"   ypoint INTEGER," +
 					"   zpressure INTEGER" +
-					");"
+					")"
 			);
-	        //db.execSQL(DB_ITEM);
 	        db.setTransactionSuccessful();//成功
 	        Log.i(TAG,"テーブルが作成されました");
 		} 
-		catch(Exception e){// 例外発生
+		catch(Exception e){//例外発生
 			e.printStackTrace();
 		}
 		finally {
@@ -118,15 +122,15 @@ private void buttonRowQuery(){
         
     }  */  
 	
-	@Override
-	//データベースのバージョンが変更の場合に呼び出される
-	public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
-		db.execSQL("DROP TABLE IF EXISTS test_table");
-        onCreate(db);
-	}
+@Override
+/*データベースのバージョンが変更の場合に呼び出される*/
+public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
+	db.execSQL("DROP TABLE IF EXISTS test_table");
+    onCreate(db);
+}
 	
-	public void onDowngrade(SQLiteDatabase db, int oldVersion, int newVersion) {
-        onUpgrade(db, oldVersion, newVersion);
-    }
+public void onDowngrade(SQLiteDatabase db, int oldVersion, int newVersion) {
+	onUpgrade(db, oldVersion, newVersion);
+}
 
 }
