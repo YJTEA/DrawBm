@@ -16,19 +16,22 @@ DBHelper dbhelper;
 /*Called when the activity is first created.*/
 @Override
 public void onCreate(Bundle savedInstanceState) {
+	
 	super.onCreate(savedInstanceState);
-	penview = new PenView(this);
 	setContentView(penview);
-	dbhelper = new DBHelper(this);
-	//setContentView(R.layout.activity_sub);
+	penview = new PenView(this);//PenViewクラスのインスタンス生成
+	dbhelper = new DBHelper(this);//DBHelperクラスのインスタンス生成
+
 }
 
 /*メニューの生成イベント*/
 @Override
 public boolean onCreateOptionsMenu(Menu menu) {//menu->draw_bm.xmlで記述
+	
 	super.onCreateOptionsMenu(menu);
 	getMenuInflater().inflate(R.menu.draw_bm,menu);  
 	return true;
+
 }
 
 /*メニューがクリックされた時のイベント*/
@@ -52,4 +55,4 @@ public boolean onOptionsItemSelected(MenuItem item) {
 	return true;
 }
 
-}//クラスDrawBm終了
+}
