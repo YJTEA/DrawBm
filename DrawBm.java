@@ -44,7 +44,7 @@ public boolean onOptionsItemSelected(MenuItem item) {
 			break;
 		case R.id.item2:
 			penview.saveToFile();
-			dbhelper.insert();
+			penview.insert();
 			penview.clearDrawList(); 
 			break;
 		case R.id.item3:
@@ -54,5 +54,7 @@ public boolean onOptionsItemSelected(MenuItem item) {
  
 	return true;
 }
+
+
 
 }
