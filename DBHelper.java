@@ -4,15 +4,11 @@ package in.andante.drawbm;
 
 import java.util.ArrayList;
 import java.util.List;
-
 import android.app.Activity;
-import android.content.ContentValues;
 import android.content.Context;
-import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.util.Log;
-import android.widget.Toast;
 import in.andante.drawbm.PenView;
 
 public class DBHelper extends SQLiteOpenHelper {
@@ -24,45 +20,14 @@ public class DBHelper extends SQLiteOpenHelper {
 	public List<Pos> posList;//Posクラスの座標データを扱うリスト
 	PenView penview;
 
-	public DBHelper( Context context ){//コンストラクタ
+public DBHelper( Context context ){//コンストラクタ
 		
-		super(context, DB_NAME, null, DB_VERSION);
-		_context = (Activity)context;
-		penview = new PenView(_context);
-		penview.posList = new ArrayList<Pos>();
+	super(context, DB_NAME, null, DB_VERSION);
+	_context = (Activity)context;
+	penview = new PenView(_context);
+	penview.posList = new ArrayList<Pos>();
 		
-	}
-	
-	/*SQLiteへデータ追加*/
-	public void insert(){
-		
-		SQLiteDatabase db1 = super.getWritableDatabase();//読み書き用
-		ContentValues values = new ContentValues();//テーブルに含まれるカラムをキーとし、カラムに対して設定したい値をペアとして保存する
-		
-	    try{
-	    	/*データ追加部分*/
-	    	for(Pos p : penview.posList){
-	    		values.put("X", p.X);
-	            values.put("Y", p.Y);
-	            values.put("Z_pressure",p.pressure);
-	            db1.insert("account", null, values);
-			}
-	    }
-	    finally{
-	        db1.close();
-	        Toast.makeText(_context, "Insert成功", Toast.LENGTH_SHORT).show();  
-	    }
-	    
-	  /*  long id = 0;
-	    //成功or失敗メッセージ
-	    if (id == -1) {  
-	        Toast.makeText(_context, "Insert失敗", Toast.LENGTH_SHORT).show();  
-	    } else {   
-	        Toast.makeText(_context, "Insert成功", Toast.LENGTH_SHORT).show();  
-	    }   */  
-	    
-	}
-	
+}
 	
 @Override
 public void onCreate(SQLiteDatabase db) {
