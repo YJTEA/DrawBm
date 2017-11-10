@@ -127,6 +127,8 @@ public boolean onTouchEvent(MotionEvent e){
 	
 }
 
+////////////////////////動作ごと//////////////////////////////////////////
+
 /*クリア処理*/
 public void clearDrawList(){
 	
@@ -137,33 +139,36 @@ public void clearDrawList(){
 
 }
 
-/*public void insert(){//データベースにデータ挿入
+/*SQLiteへデータ追加*/
+public void insert(){
 	
-	ContentValues values = new ContentValues();//テーブルに含まれるカラムをキーとし、カラムに対して設定したい値をペアとして保存する
-	DBHelper db0 = new DBHelper(_context);
+	DBHelper db0 = new DBHelper(_context);  
 	SQLiteDatabase db1 = db0.getWritableDatabase();//読み書き用
-	long id = 0;
+	ContentValues values = new ContentValues();//テーブルに含まれるカラムをキーとし、カラムに対して設定したい値をペアとして保存する
 	
     try{
-    	for(Pos p : this.posList){//posにデータ追加
+    	//データ追加部分
+    	for(Pos p : this.posList){
     		values.put("X", p.X);
             values.put("Y", p.Y);
-            values.put("z_pressure",p.pressure);
+            values.put("Z_pressure",p.pressure);
+            db1.insert("account", null, values);
 		}
-    	db1.insert("account", null, values);
     }
     finally{
         db1.close();
+        Toast.makeText(_context, "Insert成功", Toast.LENGTH_SHORT).show();  
     }
     
+    long id = 0;
     //成功or失敗メッセージ
     if (id == -1) {  
         Toast.makeText(_context, "Insert失敗", Toast.LENGTH_SHORT).show();  
     } else {   
         Toast.makeText(_context, "Insert成功", Toast.LENGTH_SHORT).show();  
-    }     
+    }   
     
-}*/
+}
 
 /*保存処理*/
 public void saveToFile(){
