@@ -139,37 +139,6 @@ public void clearDrawList(){
 
 }
 
-/*SQLiteへデータ追加*/
-public void insert(){
-	
-	DBHelper db0 = new DBHelper(_context);  
-	SQLiteDatabase db1 = db0.getWritableDatabase();//読み書き用
-	ContentValues values = new ContentValues();//テーブルに含まれるカラムをキーとし、カラムに対して設定したい値をペアとして保存する
-	
-    try{
-    	//データ追加部分
-    	for(Pos p : this.posList){
-    		values.put("X", p.X);
-            values.put("Y", p.Y);
-            values.put("Z_pressure",p.pressure);
-            db1.insert("account", null, values);
-		}
-    }
-    finally{
-        db1.close();
-        Toast.makeText(_context, "Insert成功", Toast.LENGTH_SHORT).show();  
-    }
-    
-    long id = 0;
-    //成功or失敗メッセージ
-    if (id == -1) {  
-        Toast.makeText(_context, "Insert失敗", Toast.LENGTH_SHORT).show();  
-    } else {   
-        Toast.makeText(_context, "Insert成功", Toast.LENGTH_SHORT).show();  
-    }   
-    
-}
-
 /*保存処理*/
 public void saveToFile(){
 	
